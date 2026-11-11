@@ -49,6 +49,7 @@ show collections
 
 **Question 1:** what is `_id` for? What would MongoDB do if you left it out? (Try it: insert a third product with no `_id`, then look at it in step 3.)
 
+-- _id uniquely identifies each document. If you leave it out, MongoDB automatically generates an ObjectId.
 ## 3. Read
 
 ```js
@@ -60,6 +61,7 @@ db.products.find({}, { name: 1, _id: 0 })
 
 **Question 2:** what does `$gt` mean? What does the second `{ name: 1, _id: 0 }` in the last command do? (It's called a **projection**.)
 
+--$gt means greater than. The projection displays only the name field and hides _id.
 ## 4. Update
 
 The Pen has no `stock`. Give it one:
@@ -71,6 +73,7 @@ db.products.find({ _id: 1 })
 
 **Question 3:** `stock` didn't exist on the Pen. What did `$set` do?
 
+--$set added the stock field to the Pen document and assigned it a value of 35.
 ## 5. Delete
 
 ```js
@@ -104,6 +107,8 @@ db.products.find({ _id: 3 })
 ```
 
 **Question 4:** in a SQL database, where would the reviews go? Why is keeping them inside the product handy here?
+
+--In SQL, reviews are normally stored in a separate table connected to the products table. Keeping them inside the product in MongoDB makes it easier to access the product and its reviews together.
 
 Copy everything from your terminal (from `mongosh` to the last command) and paste it here, in a code block:
 
@@ -220,6 +225,7 @@ await mango.save();
 
 **Question 7:** what error do you get? How does the schema protect your data? (Then delete the Mango lines.)
 
+-- Mongoose produces a CastError because "ten" cant be converted into a number. The schema protects the database by enforcing the expected data types.
 Commit: `Part 2: Mongoose`
 
 ---
