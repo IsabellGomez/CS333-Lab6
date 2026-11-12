@@ -186,6 +186,8 @@ Now run it a **second** time.
 
 **Question 5:** what changed the second time? Why?
 
+--The second time I ran node app.js, another Apple document was added to the database. This happens because fruit.save() creates a new document each time the program runs instead of updating an existing one.
+
 ## 9. Look at it in mongosh
 
 In your **second** terminal:
@@ -201,6 +203,9 @@ db.fruits.find()
 ```
 
 **Question 6:** your model is called `Fruit`. What is the collection called? Are your fruits from Lab 5 Part 3 in there too? Why?
+
+--Yes, the fruits from Lab 5 Part 3 are there because both programs connect to the same MongoDB database, fruitsDB, and use the fruits collection.
+
 
 ## 10. Many at once, and a wrong type
 
@@ -306,6 +311,7 @@ Now go back to the terminal running `node index.js` and press **Ctrl+C**. Send t
 
 **Question 8:** what does `curl` say now? Why? What would happen to your API if you closed that terminal, or your laptop?
 
+--Curl says it cannot connect because the server is no longer running. If the terminal closed or the process stopped, the API would stop responding. PM2 will solve this by keeping the API running in the background.
 You can close the third terminal now.
 
 ---
@@ -333,7 +339,7 @@ curl http://localhost:3000/random
 ```
 
 **Question 9:** what is the `status` of `jokes`? What does the `↺` column count?
-
+--The status of jokes is online. The column counts how many times PM2 has restarted the application.
 It works, and no terminal is busy running it.
 
 ## 16. Logs
@@ -343,6 +349,7 @@ pm2 logs jokes --lines 20
 ```
 
 **Question 10:** what's in the log? Which line of `index.js` printed it? (Press **Ctrl+C** to stop watching the log. That only stops the log, not your API.)
+-- The log contains the message "Listening on  http://localhost:3000 " It was printed by the console.log statement inside app.listen() in index.js.
 
 Other pm2 commands you'll use:
 
@@ -384,8 +391,11 @@ systemctl status nginx --no-pager | head -3
 It should say `active (running)`. Open `http://your-server-address` in your **laptop's** browser.
 
 **Question 11:** what page do you see? Where on the server does that page live?
+--Nginx page is the default webpage
 
 **TODO:** also try `http://your-server-address:3000/random` in your browser. **Question 12:** what happens? (Either answer is fine; just say what you see.)
+
+--Accessing the server directly through its IP address returns a 404
 
 ## 19. Send /api/ to your API
 
@@ -426,7 +436,7 @@ Open `http://your-server-address/api/random` in your laptop's browser. 🎉 Your
 
 **Question 13:** the browser asked for `/api/random`, but your Express route is `/random`. Which part of the nginx setting takes `/api` off? (Hint: try it without the last `/` in `proxy_pass`, test, reload, and see what happens. Put it back after.)
 
----
+-- The trailing slash in proxy_pass removes the /api/ prefix before forwarding the request, so Express receives /random.
 
 # Part 6: Use it from your laptop 💻 LAPTOP
 
@@ -452,7 +462,11 @@ Send request **5** again.
 
 **Question 14:** what happened to your joke? Why? Think about Part 2: your fruits were still there after `app.js` stopped. How would MongoDB fix your jokes? (That's Lab 7.)
 
+-- The API stores jokes in an array in memory. When PM2 restarts the Node process, the array resets and the newly added joke is lost. A database like MongoDB would preserve the joke.
+
 **Question 15:** in your own words, what does pm2 do, and what does nginx do? Why do we need both?
+
+--PM2 manages the Node.js application and keeps it running in the background and restarts if needed.  Nginx handles incoming web requests and forwards /api/ requests to the Node.js server.
 
 ## Changed your code?
 
